@@ -14,6 +14,8 @@ def get_pog(sentence):
 
     postagger.load(pos_model_path)
 
+    # 词性标注
+
     postags = postagger.postag(sentence)
 
     postagger.release()
@@ -31,6 +33,8 @@ def get_ner(sentence, postags):
     recongnizer = NamedEntityRecognizer()
 
     recongnizer.load(ner_model_path)
+
+    # 命名实体识别
 
     netags = recongnizer.recognize(sentence, postags)
 
@@ -50,6 +54,7 @@ def get_parser(sentence, postags):
 
     parser.load(parser_model_path)
 
+    # 依存句法分析
     arcs = parser.parse(sentence, postags)
 
     parser.release()
@@ -85,6 +90,7 @@ def get_elaborater(sentence):
     arcs = get_parser(cut_words, postags)
 
     for index, value in enumerate(arcs):
+        print(value)
         if value.relation == 'SBV':
             return cut_words[index]
 
@@ -137,13 +143,6 @@ def get_views(sentence, kewords):
 
     return (name, viewpoints)
 
-
-
-# def get_speaker_and_points(sentences, keywords):
-#     # target_sentences = get_target_sentence(split_sentences(sentences), keywords)
-#     # for sentence in target_sentences:
-
-
 if __name__ == '__main__':
 
     with open('news_content.txt', 'r', encoding='utf-8') as f:
@@ -154,9 +153,4 @@ if __name__ == '__main__':
                  '解释', '谈到', '深知', '称赞', '感慨', '主张', '还称', '中称', '指责', '披露', '明确提出', '描述', '提醒', '深有体会', '爆料',
                  '裁定', '宣布']
 
-
-    # print(get_elaborater('法官马提亚·齐根 星期四早些时候对法庭说，在这种情况下，这项裁决不会立即生效。'))
-
     print(get_views('法官马提亚·齐根星期四早些时候对法庭说，在这种情况下，这项裁决不会立即生效。', say_words))
-
-    # get_speaker_and_points(news_content, say_words)
